@@ -27,24 +27,24 @@ gh api -X POST repos/<owner>/accio-gateway-deeplink-poc/pages \
 
 ## 验证
 
-1. 确认 Accio 正在运行，且 Agent 权限模式为 `Auto`；
-2. 用 Safari 打开：
+已发布地址：
 
 ```text
-https://<owner>.github.io/accio-gateway-deeplink-poc/
+https://youyu4k.github.io/accio-gateway-deeplink-poc/
+https://youyu4k.github.io/accio-gateway-deeplink-poc/id.html
 ```
 
+1. 确认 Accio 正在运行，且 Agent 权限模式为 `Auto`；
+2. 用 **Chrome** 打开 canary 页面；
 3. 页面显示 `POST sent (opaque)`；
 4. Accio 自动创建会话，Agent 回复 `ACCIO_GATEWAY_GITHUB_OK`；
-5. 如需验证命令执行，打开：
+5. 打开 `id.html`，Accio 执行 `id` 并回显 `uid=... gid=...`。
 
-```text
-https://<owner>.github.io/accio-gateway-deeplink-poc/id.html
-```
-
-Accio 会执行 `id` 并回显 `uid=... gid=...`。
+本地实测（2026-11-25）：Chrome 158.0.8127.38 两个页面均成功触发；Accio 分别回复 `ACCIO_GATEWAY_GITHUB_OK` 和执行 `id`。
 
 ## 浏览器差异
 
-- Safari：页面加载即发送，无本地网络权限提示，已实测；
-- Chrome 新版本的 Private Network Access / Local Network Access 可能弹出“访问本地网络”授权，或直接拦截 public → local 请求；这是浏览器侧限制，不改变服务端未鉴权的事实。
+- **Chrome 158**：公网 HTTPS 页面直接成功，无本地网络权限提示；
+- **Safari 26.5.2**：同一 HTTPS 页面报 `TypeError: Load failed`，浏览器拦截 HTTPS→`http://127.0.0.1`；
+- Safari 场景可用任意 HTTP 页面投递（例如局域网 HTTP 页面，已实测成功）。
+- 浏览器差异不改变服务端未鉴权的事实。
